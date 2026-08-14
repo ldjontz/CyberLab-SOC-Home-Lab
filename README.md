@@ -20,15 +20,26 @@ creation.
 
 ## Architecture
 
-``` mermaid
+```mermaid
 flowchart LR
-    W[Windows 11 Endpoint\nWIN11-01] -->|Windows Event Logs| UF[Splunk Universal Forwarder]
-    S[Sysmon] -->|Sysmon Operational Log| UF
-    UF -->|Forwarded telemetry| SP[Splunk Enterprise]
-    SP --> D[Detection Searches]
-    D --> A[Scheduled Alerts]
-    SP --> DB[CyberLab SOC Dashboard]
+    WIN["Windows 11 Endpoint<br/>WIN11-01"]
+    SYS["Sysmon<br/>Endpoint Telemetry"]
+    UF["Splunk Universal Forwarder"]
+    SPLUNK["Splunk Enterprise"]
+    DET["Detection Searches"]
+    ALERT["Scheduled Alerts"]
+    DASH["CyberLab SOC Dashboard"]
+
+    WIN -->|"Windows Event Logs"| UF
+    WIN --> SYS
+    SYS -->|"Sysmon Operational Log"| UF
+    UF -->|"Forwarded Telemetry"| SPLUNK
+    SPLUNK --> DET
+    DET --> ALERT
+    SPLUNK --> DASH
 ```
+
+**Data flow:** Windows Event Logs and Sysmon telemetry are collected from the Windows 11 endpoint by the Splunk Universal Forwarder and sent to Splunk Enterprise. The ingested telemetry is then used for detection searches, scheduled alerts, and SOC dashboard visualizations.
 
 ## Technologies
 
