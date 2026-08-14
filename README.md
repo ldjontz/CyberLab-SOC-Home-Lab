@@ -43,34 +43,12 @@ flowchart LR
 
 ## Detection Coverage
 
-  ------------------------------------------------------------------------
-  Detection        Telemetry                     Severity Purpose
-  ---------------- ---------------- --------------------- ----------------
-  Repeated failed  Windows Event ID                Medium Identify
-  logins           4625                                   repeated
-                                                          authentication
-                                                          failures against
-                                                          user accounts
-
-  Suspicious       Sysmon Event ID                   High Detect
-  PowerShell       1                                      PowerShell
-  execution                                               command lines
-                                                          containing
-                                                          suspicious
-                                                          execution
-                                                          patterns
-
-  PowerShell       Sysmon Event ID                   High Detect
-  spawning command 1                                      PowerShell
-  shell                                                   launching
-                                                          `cmd.exe`
-
-  PowerShell       Sysmon Event ID          Investigative Surface outbound
-  network activity 3                                      network
-                                                          connections
-                                                          initiated by
-                                                          PowerShell
-  ------------------------------------------------------------------------
+| Detection | Telemetry | Severity | Purpose |
+| --- | --- | --- | --- |
+| Repeated Failed Logins | Windows Event ID 4625 | Medium | Identify repeated authentication failures against user accounts |
+| Suspicious PowerShell Execution | Sysmon Event ID 1 | High | Detect PowerShell command lines containing suspicious execution patterns |
+| PowerShell Spawning Command Shell | Sysmon Event ID 1 | High | Detect PowerShell launching `cmd.exe` |
+| PowerShell Network Activity | Sysmon Event ID 3 | Medium | Surface outbound network connections initiated by PowerShell |
 
 ## 1. Windows Endpoint and Domain Configuration
 
