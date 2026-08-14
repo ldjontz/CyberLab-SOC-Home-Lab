@@ -96,12 +96,7 @@ blindly expanding every value.
 
 ### Failed user login count
 
-``` spl
-index=windows host=WIN11-01 EventCode=4625
-| eval TargetAccount=mvindex(Account_Name,1)
-| where isnotnull(TargetAccount) AND TargetAccount!="" AND TargetAccount!="-" AND NOT like(TargetAccount,"%$")
-| stats count AS failed_logins
-```
+[Failed User Login Count](DETECTIONS.md#failed-user-logins)
 
 ### Failed logins by account
 
