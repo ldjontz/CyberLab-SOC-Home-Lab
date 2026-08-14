@@ -79,7 +79,7 @@ to send Security, Application, and System event logs to the Splunk
 server. Successful ingestion was validated in Splunk by grouping events
 by source and sourcetype.
 
-![WIN11-01 successfully joined to the cyberlab.local Active Directory domain.](images/02-windows_log_collection.PNG)
+![WIN11-01 successfully sending telemetry through Splunk Universal Forwarder](images/02-windows_log_collection.PNG)
 
 ## 3. Failed Login Detection
 
@@ -124,27 +124,7 @@ native process counts alone.
 
 ### Suspicious PowerShell search
 
-``` spl
-index=windows host=WIN11-01 sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
-| rex field=_raw "<EventID>(?<SysmonEventID>\\d+)</EventID>"
-| where SysmonEventID="1"
-| rex field=_raw "<Data Name='Image'>(?<Image>[^<]+)"
-| rex field=_raw "<Data Name='CommandLine'>(?<CommandLine>[^<]+)"
-| rex field=_raw "<Data Name='ParentImage'>(?<ParentImage>[^<]+)"
-| rex field=_raw "<Data Name='User'>(?<User>[^<]+)"
-| where like(lower(Image), "%powershell.exe")
-| eval detection_reason=case(
-    like(lower(CommandLine), "%executionpolicy bypass%"), "Execution Policy Bypass",
-    like(lower(CommandLine), "%encodedcommand%"), "Encoded Command",
-    like(lower(CommandLine), "% -enc %"), "Encoded Command",
-    like(lower(CommandLine), "%downloadstring%"), "DownloadString",
-    like(lower(CommandLine), "%invoke-webrequest%"), "Web Request",
-    like(lower(CommandLine), "%invoke-expression%"), "Invoke-Expression"
-  )
-| where isnotnull(detection_reason)
-| table _time User detection_reason Image CommandLine ParentImage
-| sort - _time
-```
+[Suspicious PowerShell Search](DETECTIONS.md#suspicious-powershell)
 
 ![Suspicious PowerShell detection](images/07-suspicious-powershell.png)
 
@@ -155,20 +135,7 @@ by processes. PowerShell network activity was filtered to show the
 initiating user, source IP, destination IP, protocol, and destination
 port.
 
-``` spl
-index=windows host=WIN11-01 sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
-| rex field=_raw "<EventID>(?<SysmonEventID>\\d+)</EventID>"
-| where SysmonEventID="3"
-| rex field=_raw "<Data Name='Image'>(?<Image>[^<]+)"
-| rex field=_raw "<Data Name='User'>(?<User>[^<]+)"
-| rex field=_raw "<Data Name='Protocol'>(?<Protocol>[^<]+)"
-| rex field=_raw "<Data Name='SourceIp'>(?<SourceIp>[^<]+)"
-| rex field=_raw "<Data Name='DestinationIp'>(?<DestinationIp>[^<]+)"
-| rex field=_raw "<Data Name='DestinationPort'>(?<DestinationPort>[^<]+)"
-| where like(lower(Image), "%powershell.exe")
-| table _time User Image Protocol SourceIp DestinationIp DestinationPort
-| sort - _time
-```
+[PowerShell Network Connections](DETECTIONS.md#powershell-network-connections)
 
 ![PowerShell network
 connections](images/06-sysmon-network-connections.png)
