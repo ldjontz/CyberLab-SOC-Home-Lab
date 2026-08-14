@@ -61,6 +61,8 @@ flowchart LR
 | PowerShell Spawning Command Shell | Sysmon Event ID 1 | High | Detect PowerShell launching `cmd.exe` |
 | PowerShell Network Activity | Sysmon Event ID 3 | Medium | Surface outbound network connections initiated by PowerShell |
 
+For the complete SPL queries used in this project, see the [Detection Searches](DETECTIONS.md) documentation.
+
 ## 1. Windows Endpoint and Domain Configuration
 
 The Windows 11 endpoint WIN11-01 was joined to the cyberlab.local Active Directory domain.
