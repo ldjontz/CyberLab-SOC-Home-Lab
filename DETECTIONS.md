@@ -44,7 +44,7 @@ sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
 ```
 
 ## PowerShell Network Connections
-```
+``` spl
 index=windows host=WIN11-01
 sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
 | rex field=_raw "<EventID>(?<SysmonEventID>\d+)</EventID>"
@@ -55,5 +55,21 @@ sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
 | rex field=_raw "<Data Name='DestinationPort'>(?<DestinationPort>[^<]+)"
 | where like(lower(Image), "%powershell.exe")
 | table _time User DestinationIp DestinationPort
+| sort - _time
+```
+
+## Suspicious Parent/Child Process Detection
+``` spl
+index=windows host=WIN11-01
+sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"
+| rex field=_raw "<EventID>(?<SysmonEventID>\d+)</EventID>"
+| where SysmonEventID="1"
+| rex field=_raw "<Data Name='Image'>(?<Image>[^<]+)"
+| rex field=_raw "<Data Name='CommandLine'>(?<CommandLine>[^<]+)"
+| rex field=_raw "<Data Name='ParentImage'>(?<ParentImage>[^<]+)"
+| rex field=_raw "<Data Name='User'>(?<User>[^<]+)"
+| where like(lower(ParentImage), "%powershell.exe")
+| where like(lower(Image), "%cmd.exe")
+| table _time User ParentImage Image CommandLine
 | sort - _time
 ```
