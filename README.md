@@ -18,6 +18,15 @@ Windows authentication analysis, endpoint telemetry, SPL development,
 detection engineering, alert validation, troubleshooting, and dashboard
 creation.
 
+## Project Results
+
+- Centralized Windows Security and Sysmon telemetry in Splunk
+- Developed SPL detections for repeated failed logins and suspicious PowerShell activity
+- Created scheduled alerts with Medium and High severity classifications
+- Investigated PowerShell process creation and outbound network connections
+- Built a SOC dashboard to visualize authentication and endpoint security activity
+- Troubleshot Windows Event Log forwarding, Sysmon ingestion, and field extraction issues
+
 ## Architecture
 
 ```mermaid
