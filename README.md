@@ -79,7 +79,7 @@ Domain integration provides a realistic enterprise environment for generating
 and monitoring Windows authentication activity, including successful and failed
 domain logons.
 
-![WIN11-01 successfully joined to the cyberlab.local Active Directory domain.](images/02-windows-events-splunk.png)
+![WIN11-01 successfully joined to the cyberlab.local Active Directory domain.](images/01-windows-endpoint-domain-configuration.png)
 
 ## 2. Windows Log Collection
 
@@ -87,6 +87,8 @@ The Windows endpoint was configured with the Splunk Universal Forwarder
 to send Security, Application, and System event logs to the Splunk
 server. Successful ingestion was validated in Splunk by grouping events
 by source and sourcetype.
+
+![WIN11-01 successfully joined to the cyberlab.local Active Directory domain.](images/02-windows_log_collection.PNG)
 
 ## 3. Failed Login Detection
 
