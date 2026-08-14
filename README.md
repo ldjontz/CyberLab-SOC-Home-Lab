@@ -100,14 +100,7 @@ blindly expanding every value.
 
 ### Failed logins by account
 
-``` spl
-index=windows host=WIN11-01 EventCode=4625
-| eval TargetAccount=mvindex(Account_Name,1)
-| where isnotnull(TargetAccount) AND TargetAccount!="" AND TargetAccount!="-" AND NOT like(TargetAccount,"%$")
-| stats count AS failed_attempts by TargetAccount
-| sort - failed_attempts
-| head 10
-```
+[Failed User Login by Account](DETECTIONS.md#failed-logins-by-account)
 
 ## 4. Sysmon Deployment and Forwarding
 
