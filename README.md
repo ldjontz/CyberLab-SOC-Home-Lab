@@ -72,16 +72,23 @@ flowchart LR
                                                           PowerShell
   ------------------------------------------------------------------------
 
-## 1. Windows Log Collection
+## 1. Windows Endpoint and Domain Configuration
+
+The Windows 11 endpoint WIN11-01 was joined to the cyberlab.local Active Directory domain.
+Domain integration provides a realistic enterprise environment for generating
+and monitoring Windows authentication activity, including successful and failed
+domain logons.
+
+![WIN11-01 successfully joined to the cyberlab.local Active Directory domain.](images/02-windows-events-splunk.png)
+
+## 2. Windows Log Collection
 
 The Windows endpoint was configured with the Splunk Universal Forwarder
 to send Security, Application, and System event logs to the Splunk
 server. Successful ingestion was validated in Splunk by grouping events
 by source and sourcetype.
 
-![Windows telemetry in Splunk](images/02-windows-events-splunk.png)
-
-## 2. Failed Login Detection
+## 3. Failed Login Detection
 
 Windows Event ID **4625** was used to monitor failed authentication
 attempts. Test failures were generated and then investigated in Splunk
@@ -114,7 +121,7 @@ index=windows host=WIN11-01 EventCode=4625
 | head 10
 ```
 
-## 3. Sysmon Deployment and Forwarding
+## 4. Sysmon Deployment and Forwarding
 
 Sysmon was installed on the Windows endpoint using a modular
 configuration to provide richer endpoint telemetry. The Sysmon
@@ -127,7 +134,7 @@ event channel locally, checking the effective Splunk input configuration
 with `btool`, reviewing `splunkd.log`, and correcting the forwarder's
 access before confirming ingestion.
 
-## 4. Process Creation --- Sysmon Event ID 1
+## 5. Process Creation --- Sysmon Event ID 1
 
 Sysmon Event ID **1** provided process creation telemetry including
 image path, command line, user, and parent process. This allowed
@@ -160,7 +167,7 @@ index=windows host=WIN11-01 sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/
 
 ![Suspicious PowerShell detection](images/07-suspicious-powershell.png)
 
-## 5. Network Connections --- Sysmon Event ID 3
+## 6. Network Connections --- Sysmon Event ID 3
 
 Sysmon Event ID **3** was used to identify network connections initiated
 by processes. PowerShell network activity was filtered to show the
@@ -185,7 +192,7 @@ index=windows host=WIN11-01 sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/
 ![PowerShell network
 connections](images/06-sysmon-network-connections.png)
 
-## 6. Alerting
+## 7. Alerting
 
 The detections were converted into scheduled Splunk alerts. Repeated
 failed logins were assigned **Medium** severity, while suspicious
@@ -197,7 +204,7 @@ endpoint and confirming that Splunk recorded the triggered alerts.
 
 ![Triggered Splunk alerts](images/08-triggered-alerts.png)
 
-## 7. SOC Dashboard
+## 8. SOC Dashboard
 
 The final **CyberLab SOC Overview** dashboard provides a compact
 operational view of authentication and endpoint activity. The left side
